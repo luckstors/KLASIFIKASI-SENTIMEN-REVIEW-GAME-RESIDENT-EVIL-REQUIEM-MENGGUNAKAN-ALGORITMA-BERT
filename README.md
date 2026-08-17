@@ -29,19 +29,19 @@ Data ulasan dikumpulkan langsung dari Steam Web API menggunakan fungsi kustom `s
 
 Contoh data hasil scraping:
 
-![Contoh Data Ulasan](images/gambar_6.png)
+![Contoh Data Ulasan](Images/gambar_6.png)
 
 ### 3. Eksplorasi Data (EDA)
 
 Distribusi kelas positif dan negatif relatif seimbang (±1000 masing-masing), sehingga dataset layak dipakai tanpa perlu teknik penyeimbangan tambahan.
 
-![Distribusi Sentimen](images/gambar_7.png)
+![Distribusi Sentimen](Images/gambar_7.png)
 
 WordCloud kata yang paling sering muncul:
 
 | Seluruh Ulasan | Ulasan Positif | Ulasan Negatif |
 |---|---|---|
-| ![WordCloud Seluruh Ulasan](images/gambar_8.png) | ![WordCloud Positif](images/gambar_9.png) | ![WordCloud Negatif](images/gambar_10.png) |
+| ![WordCloud Seluruh Ulasan](Images/gambar_8.png) | ![WordCloud Positif](Images/gambar_9.png) | ![WordCloud Negatif](Images/gambar_10.png) |
 
 Kata dominan di seluruh ulasan: *game, leon, resident, story, gameplay, character, good*. Pada ulasan positif menonjol kata seperti *great, best, good, well, fun*; pada ulasan negatif menonjol *bad, spoiler, boring, issue, problem*.
 
@@ -49,7 +49,7 @@ Kata dominan di seluruh ulasan: *game, leon, resident, story, gameplay, characte
 
 Teks dibersihkan: hapus URL, tag HTML, karakter non-ASCII/emoji, normalisasi huruf berulang (`soooo` → `soo`), lowercase, dan hapus duplikat (3 baris duplikat dihapus → dataset akhir 1997 ulasan).
 
-![Fungsi Normalisasi Teks](images/gambar_11.png)
+![Fungsi Normalisasi Teks](Images/gambar_11.png)
 
 Contoh: `"SOOOOO AMAZING!! Check https://steam.com <br> This game is #1 😍!!!"` → `"soo amazing!! check this game is 1 !!"`
 
@@ -57,7 +57,7 @@ Contoh: `"SOOOOO AMAZING!! Check https://steam.com <br> This game is #1 😍!!!"
 
 Teks bersih ditokenisasi dengan `BertTokenizer` (`bert-base-uncased`), ditambah token `[CLS]` di awal dan `[SEP]` di akhir, dengan `max_length=128`, `padding='max_length'`, `truncation=True`.
 
-![Contoh Hasil Tokenisasi](images/gambar_12.png)
+![Contoh Hasil Tokenisasi](Images/gambar_12.png)
 
 ### 6. Pembagian Dataset
 
@@ -73,7 +73,7 @@ Split 70:15:15 (Train:Validation:Test) menggunakan `train_test_split` dengan `st
 
 Model `BertForSequenceClassification` dimuat dari checkpoint `bert-base-uncased`. Parameter `classifier.weight`/`classifier.bias` berstatus MISSING — ini normal karena lapisan klasifikasi diinisialisasi baru dan dipelajari saat fine-tuning.
 
-![Load Model BERT](images/gambar_13.png)
+![Load Model BERT](Images/gambar_13.png)
 
 **Konfigurasi training:** 3 epoch, batch size 16, learning rate 2e-5, optimizer AdamW, evaluasi & simpan model tiap akhir epoch, model terbaik dipilih berdasarkan F1-score tertinggi, dengan `EarlyStoppingCallback` (patience 2 epoch).
 
@@ -85,7 +85,7 @@ Model `BertForSequenceClassification` dimuat dari checkpoint `bert-base-uncased`
 
 F1-score terus meningkat tiap epoch (early stopping tidak aktif), total waktu training ±110 menit.
 
-![Progres Pelatihan Model](images/gambar_14.png)
+![Progres Pelatihan Model](Images/gambar_14.png)
 
 ### 8. Evaluasi Model
 
@@ -98,11 +98,11 @@ Dievaluasi pada 300 data test yang belum pernah dilihat model:
 | Recall | 92,67% |
 | F1-Score | 92,66% |
 
-![Diagram Hasil Evaluasi](images/gambar_15.png)
+![Diagram Hasil Evaluasi](Images/gambar_15.png)
 
 **Confusion Matrix** (n=300): 136 negatif & 142 positif diprediksi benar; 14 negatif salah diprediksi positif (False Positive), 8 positif salah diprediksi negatif (False Negative).
 
-![Confusion Matrix](images/gambar_16.png)
+![Confusion Matrix](Images/gambar_16.png)
 
 |  | Prediksi Negatif | Prediksi Positif |
 |---|---|---|
@@ -113,19 +113,19 @@ Dievaluasi pada 300 data test yang belum pernah dilihat model:
 
 Model diuji dengan kalimat baru di luar dataset:
 
-![Contoh Prediksi Kalimat Baru](images/gambar_17.png)
+![Contoh Prediksi Kalimat Baru](Images/gambar_17.png)
 
 Hasil prediksi juga disusun dalam dataframe lengkap (Review, Label Asli, Prediksi, probabilitas kelas positif) untuk analisis lebih lanjut:
 
-![Cuplikan Dataframe Hasil Prediksi](images/gambar_18.png)
+![Cuplikan Dataframe Hasil Prediksi](Images/gambar_18.png)
 
 **Analisis tambahan — rata-rata panjang ulasan per sentimen:** ulasan negatif jauh lebih panjang (182,0 kata) dibanding ulasan positif (80,6 kata), mengindikasikan pengguna dengan sentimen negatif cenderung menulis kritik lebih detail.
 
-![Rata-Rata Panjang Ulasan](images/gambar_19.png)
+![Rata-Rata Panjang Ulasan](Images/gambar_19.png)
 
 **Kata yang paling sering muncul per sentimen** (setelah stopwords disaring): ulasan positif didominasi istilah naratif/karakter (mis. Leon, story), ulasan negatif didominasi istilah teknis (bug, crash, optimisasi).
 
-![Kata Sering Muncul per Sentimen](images/gambar_20.png)
+![Kata Sering Muncul per Sentimen](Images/gambar_20.png)
 
 ## Kesimpulan
 
