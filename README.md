@@ -19,7 +19,7 @@ Proyek klasifikasi sentimen (positif/negatif) terhadap review game **Resident Ev
 
 ### 1. Instalasi & Import Library
 
-![Instalasi dan Import Library](images/gambar_5.png)
+![Instalasi dan Import Library](Images/gambar_5.png)
 
 Library yang digunakan: `numpy` & `pandas` untuk manipulasi data, `transformers` (`BertTokenizer`, `BertForSequenceClassification`, `Trainer`, `TrainingArguments`, `EarlyStoppingCallback`) untuk pemodelan BERT, `torch` untuk operasi tensor, `scikit-learn` untuk pembagian data & metrik evaluasi, serta `matplotlib`, `seaborn`, dan `wordcloud` untuk visualisasi.
 
